@@ -29,15 +29,11 @@ const { developmentChains } = require("../../helper-hardhat-config");
           });
 
           describe("fund", function () {
-              // https://ethereum-waffle.readthedocs.io/en/latest/matchers.html
-              // could also do assert.fail
               it("Fails if you don't send enough ETH", async () => {
                   await expect(fundMe.fund()).to.be.revertedWith(
                       "You need to spend more ETH!"
                   );
               });
-              // we could be even more precise here by making sure exactly $50 works
-              // but this is good enough for now
               it("Updates the amount funded data structure", async () => {
                   await fundMe.fund({ value: sendValue });
                   const response = await fundMe.getAddressToAmountFunded(
@@ -51,6 +47,7 @@ const { developmentChains } = require("../../helper-hardhat-config");
                   assert.equal(response, deployer);
               });
           });
+
           describe("withdraw", function () {
               beforeEach(async () => {
                   await fundMe.fund({ value: sendValue });
@@ -84,8 +81,6 @@ const { developmentChains } = require("../../helper-hardhat-config");
                       endingDeployerBalance.add(gasCost).toString()
                   );
               });
-              // this test is overloaded. Ideally we'd split it into multiple tests
-              // but for simplicity we left it as one
               it("is allows us to withdraw with multiple funders", async () => {
                   // Arrange
                   const accounts = await ethers.getSigners();
